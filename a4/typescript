@@ -1,0 +1,32 @@
+Script started on Wed Mar 11 12:26:37 2014
+c99chen@ubuntu1204-006:~/cs343/a4$ exit[2Plscd cs343ls[Kcd cs343ls[Kexit[Ktime ./testscript.sh 
+SEM Phil Tests Start
+6000000 SEM tests passed
+12000000 SEM tests passed
+18000000 SEM tests passed
+24000000 SEM tests passed
+30000000 SEM tests passed
+***************************************
+INT Phil Tests Start
+6000000 INT tests passed
+12000000 INT tests passed
+18000000 INT tests passed
+24000000 INT tests passed
+30000000 INT tests passed
+***************************************
+INTB Phil Tests Start
+6000000 INTB tests passed
+12000000 INTB tests passed
+18000000 INTB tests passed
+24000000 INTB tests passed
+30000000 INTB tests passed
+***************************************
+All Tests Passed
+
+real	9m11.176s
+user	2m43.064s
+sys	2m5.732s
+c99chen@ubuntu1204-006:~/cs343/a4$ exit
+exit
+
+Script done on Wed Mar 12 12:38:09 2014

@@ -1,0 +1,393 @@
+PHIL TEST DOCUMENTATION
+=======================
+This program simulate the classic The Dining Philosophers problem. There is a table
+for a group of philosophers to dine on. The table is set with number of plates of 
+spaghetti with one fork between two adjacent plates. Before eating, a philosopher 
+must get the two forks on either side of the plate; hence, two adjacent philosophers 
+cannot eat simultaneously. The host reasons that, when a philosopher’s stomach begins
+to growl, she can simply wait until the two philosophers on either side begin thinking,
+then simultaneously pick up the two forks on either side of her plate and begin eating.
+If a philosopher cannot get both forks immediately, then she must wait until both are free.
+
+USER INTERFACE TESTING
+    There is no user interface to be tested, so the testing focuses
+    solely on the algorithm and synchronization for philosophers.
+    
+
+ALGORITHM AND SYNCHRONIZATION TESTING
+
+  TEST 1:
+  -------
+    DATA DESCRIPTION
+    Input an invalid arguments or too many arguments into program.
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+    
+     1	Script started on Wed 12 Mar 2014 11:52:05 AM EDT
+     2	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil 2 1 1 1
+     3	Usage(too many arguments): ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+     4	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil 2 1 0
+     5	Error: ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+     6	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil 1 2 1
+     7	Error: ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+     8	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil 2 -1 1
+     9	Error: ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+    10	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil -2
+    11	Error: ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+    12	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil 2 0
+    13	Error: ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+    14	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil 2 2 -1
+    15	Error: ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+    16	c99chen@ubuntu1204-006:~/cs343/a4$ ./phil -1 -22 -900
+    17	Error: ./phil  [ philosophers (> 1) [ noodles (> 0) [ Seed (> 0) ] ] ]
+    18	c99chen@ubuntu1204-006:~/cs343/a4$ exit
+    19	exit
+    20	
+    21	Script done on Wed 12 Mar 2014 11:53:50 AM EDT
+    
+    ANALYSIS
+    My program can handle invalid arguments like too many arguments input into program and
+    invalid input to number of philosopher, noodles, or seed. Since the program receive
+    invalid arguments, it will print a usage or error message out, and then terminate program.
+    
+    
+
+    TEST 2:
+    -------
+    DATA DESCRIPTION
+    For each of the three versions, I test it in a different machine, with input: ./phil 10 10 1
+
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+
+     1	Script started on Wed 12 Mar 2014 03:17:25 PM EDT
+     2	c99chen@ubuntu1204-004:~/cs343/a4$ make phil TYPE=SEM
+     3	...  14
+    15	c99chen@ubuntu1204-004:~/cs343/a4$ ./phil 10 10 10
+    16	Phil0	Phil1	Phil2	Phil3	Phil4	Phil5	Phil6	Phil7	Phil8	Phil9
+    17	******	******	******	******	******	******	******	******	******	******
+    18	H
+    19	E4,6	H	H	H	H
+    20					E2,8	H	H	H	H	H
+    21					T	E2,8
+    22	T			E4,6		T	E5,5
+    23		E4,6					T	E3,7		E3,7
+    24		T		T	H		H	T
+    25			E1,9				E3,2	H	E3,7	T
+    26		H			E2,6				T
+    27					T		T
+    28			T				H	E4,3	H
+    29		E4,2						T		H
+    30								H
+    31								E3,0
+    32	...	...	...	...	...	...	...	F	...	...
+    33	H			H			E1,1		E4,3
+    34		T		E1,5			T		T
+    35				T			H		H
+    36							E1,0			E3,4
+    37	E2,4		H						E3,0	T
+    38	...	...	...	...	...	...	...	...	F	...
+    39	...	...	...	...	...	...	F	...	...	...
+    40	T	H	E3,6			H
+    41			T			E3,5
+    42						T				H
+    43										E3,1
+    44		E2,0								T
+    45	...	F	...	...	...	...	...	...	...	...
+    46			H	H	H
+    47					E2,4
+    48			E4,2		T
+    49	H		T	E1,4
+    50				T	H	H				H
+    51						E3,2
+    52						T				E1,0
+    53	...	...	...	...	...	...	...	...	...	F
+    54	E2,2				E4,0
+    55	...	...	...	...	F	...	...	...	...	...
+    56	T					H
+    57	H		H			E1,1
+    58	E2,0					T
+    59	F	...	...	...	...	...	...	...	...	...
+    60				H
+    61				E4,0
+    62	...	...	...	F	...	...	...	...	...	...
+    63			E1,1
+    64			T			H
+    65						E1,0
+    66	...	...	...	...	...	F	...	...	...	...
+    67			H
+    68			E1,0
+    69	...	...	F	...	...	...	...	...	...	...
+    70	***********************
+    71	Philosophers terminated
+    72	c99chen@ubuntu1204-004:~/cs343/a4$ make phil TYPE=INT
+    73	..  93
+    94	c99chen@ubuntu1204-004:~/cs343/a4$ ./phil 10 10 10
+    95	Phil0	Phil1	Phil2	Phil3	Phil4	Phil5	Phil6	Phil7	Phil8	Phil9
+    96	******	******	******	******	******	******	******	******	******	******
+    97	H
+    98	E4,6	H
+    99		W1,2	H	H	H
+   100				W3,4	E2,8	H	H	H	H	H
+   101	T	E4,6		E2,8	T	E4,6
+   102			W2,3	T	H		W6,7
+   103	H	T	E1,9	H	E4,4	T		E4,6	W8,9	E4,6
+   104	E4,2			W3,4		H	E5,5	T	E3,7	T
+   105		H	T	E4,4	T	W5,6	T	H	T	H
+   106	T	W1,2			H	E2,4		E4,2	H	W9,0
+   107	H	E3,3		T		T	H	T		E4,2
+   108	W0,1	T	H	H	E1,3	H	E1,4	H	W8,9	T
+   109	E2,0			W3,4	T				E5,2
+   110			W2,3	E4,0	H	W5,6	T			H
+   111		H				E3,1		W7,8	T
+   112	F	...	...	...	...	...	...	...	...	...
+   113	...	...	...	F	...	...	...	...	...	...
+   114			E3,6		W4,5	T		E1,1	H	E1,1
+   115		W1,2	T		E3,0			T		T
+   116	...	...	...	...	F	...	...	...	...	...
+   117		E3,0					H		E2,0
+   118	...	F	...	...	...	...	...	...	...	...
+   119	...	...	...	...	...	...	...	...	F	...
+   120							E1,3			H
+   121							T			E1,0
+   122	...	...	...	...	...	...	...	...	...	F
+   123								H
+   124						H		E1,0
+   125	...	...	...	...	...	...	...	F	...	...
+   126						E1,0	H
+   127	...	...	...	...	...	F	...	...	...	...
+   128			H				W6,7
+   129			E5,1				E3,0
+   130			T
+   131	...	...	...	...	...	...	F	...	...	...
+   132			H
+   133			E1,0
+   134	...	...	F	...	...	...	...	...	...	...
+   135	***********************
+   136	Philosophers terminated
+   137	c99chen@ubuntu1204-004:~/cs343/a4$ make phil TYPE=INTB
+   138	...  156
+   157	c99chen@ubuntu1204-004:~/cs343/a4$ ./phil 10 10 10
+   158	Phil0	Phil1	Phil2	Phil3	Phil4	Phil5	Phil6	Phil7	Phil8	Phil9
+   159	******	******	******	******	******	******	******	******	******	******
+   160	H
+   161	E4,6	H
+   162		W1,2	H	H	H
+   163				W3,4	E2,8	H	H	H	H	H
+   164	T	W1,2		E1,9	T	E4,6
+   165	H	E3,7	W2,3	T	H		W6,7	E3,7	W8,9	E2,8
+   166	B			H	B		W6,7		W8,9
+   167			W2,3	B		T
+   168		T	W2,3	B
+   169		H	E2,8	B				T
+   170	B	B		B	B	H	E4,6		W8,9	T
+   171					E5,3	W5,6			E3,7	H
+   172		W1,2	T							W9,0
+   173		E1,6					T	H		W9,0
+   174	W0,1			W3,4		W5,6			T	W9,0
+   175	W0,1			W3,4	T	W5,6	H	B	H	E2,6
+   176	W0,1	T	H	E5,4		E1,5
+   177	W0,1		B				W6,7	E4,3	W8,9	T
+   178		H			H	T	W6,7		W8,9
+   179	E4,2		B	T	B		W6,7		W8,9	H
+   180		B	B	H	B	H	W6,7	T	W8,9	B
+   181	T	B	E5,3	B	B	W5,6	E2,4	H	E4,3	B
+   182	H	W1,2		W3,4	E3,0	W5,6		W7,8	T	W9,0
+   183	B	W1,2	T	W3,4		W5,6	T	W7,8		E2,4
+   184	...	...	...	...	F	...	...	...	...	...
+   185	B	E1,5		W3,4		W5,6	H	E1,2	H
+   186	B		H	E1,3		E1,4			B	T
+   187	W0,1	T							W8,9	H
+   188	E2,0							T	W8,9
+   189				T			W6,7		E3,0	B
+   190			B			T	W6,7	H
+   191	F	...	...	...	...	...	...	...	...	...
+   192	...	...	...	...	...	...	...	...	F	...
+   193		H		H			E4,0			W9,0
+   194	...	...	...	...	...	...	F	...	...	...
+   195			E3,0					W7,8		E1,3
+   196		W1,2		W3,4				E2,0		T
+   197	...	...	F	...	...	...	...	...	...	...
+   198		W1,2		W3,4		H
+   199	...	...	...	...	...	...	...	F	...	...
+   200		E5,0		E3,0		E3,1
+   201	...	...	...	F	...	...	...	...	...	...
+   202	...	F	...	...	...	...	...	...	...	...
+   203						T				H
+   204						H				E3,0
+   205	...	...	...	...	...	...	...	...	...	F
+   206						E1,0
+   207	...	...	...	...	...	F	...	...	...	...
+   208	***********************
+   209	Philosophers terminated
+   210	c99chen@ubuntu1204-004:~/cs343/a4$ exit
+   211	exit
+   212	
+   213	Script done on Wed 12 Mar 2014 03:18:36 PM EDT
+   
+   From line 15-71 94-136 157-209, we can see the all 3 versions of this program
+   run well and all of 3 terminated without assertion or error.
+
+    ANALYSIS
+    - From line 15-71 94-136 157-209, we can see philosophers in all 3 versions will
+    not eat noodles with his adjacent philosophers at same time. 
+    - Since there is no
+    infinitive waiting/barging message printed by one philosopher, we know there is no
+    starvation in this program
+    - Only INTB version print barging message out because some philosophers intend to 
+    eat noodles on table but there are some philosophers just to be signaled. Thus, 
+    the coming philosophers are considered barging tasks and put them into condition
+    variable's waiting list. They will be signaled since there is a philosopher put down
+    forks. However, they still need to check if all signaled philosopher have done picked
+    up their forks. That's why there are some 'B's appear continuely at same philosopher's
+    state.
+    - There is no starvation in SEM and INT version since every philosopher will get forks 
+    after previous guys done their eating.
+    - There is no starvation in INTB since there is only one queue and the number of waiting
+    tasks is bounded. All blocked tasks will be serverd by following FIFO rule.
+
+    
+    
+    
+  TEST 3:
+  -------
+    DATA DESCRIPTION
+    Using a shell script to input arguments into program by using looping
+    The seed to program will be generated randomly.
+    This test script is testing if there is deadlock, assertion fails, or
+    not reaching to the end of program successfully.
+    The script testscript.sh code:
+
+     1	#!/bin/bash
+     2	echo "SEM Phil Tests Start"
+     3	make clean &> /dev/null
+     4	make phil$ TYPE=SEM &> /dev/null
+     5	for p in {2..51}; do
+     6	for n in {1..200}; do
+     7	for i in {1..300}; do
+     8	    seed=$((RANDOM%10000+1))
+     9	    ./phil ${p} ${n} ${seed} > output1
+    10	    success=`egrep -ci "Philosophers terminated" output1`;
+    11	    deadlock=`egrep -ci "deadlock" output1`;
+    12	    fail=`egrep -ci "assertion" output1`;
+    13	    if [ ${success} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${fail} -ne 0 ]; then
+    14	        echo "SEM Test Failed! phil ${p} ${n} ${seed}" >& 2
+    15	        echo "Please check output1"
+    16	        exit 1;
+    17	    fi
+    18	done
+    19	done
+    20	if [ $((${p}%10)) -eq 1 ];then
+    21	echo "$(((${p}-1)*600000)) SEM tests passed"
+    22	fi
+    23	done
+    24	echo "***************************************"
+    25	
+    26	echo "INT Phil Tests Start"
+    27	make clean &> /dev/null
+    28	make phil TYPE=INT &> /dev/null
+    29	for p in {2..51}; do
+    30	for n in {1..200}; do
+    31	for i in {1..300}; do
+    32	    seed=$((RANDOM%10000+1))
+    33	    ./phil ${p} ${n} ${seed} > output2
+    34	    success=`egrep -ci "Philosophers terminated" output2`;
+    35	    deadlock=`egrep -ci "deadlock" output2`;
+    36	    fail=`egrep -ci "assertion" output2`;
+    37	    if [ ${success} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${fail} -ne 0 ]; then
+    38	        echo "INT Test Failed! phil ${p} ${n} ${seed}" >& 2
+    39	        echo "Please check output2"
+    40	        exit 1;
+    41	    fi
+    42	done
+    43	done
+    44	if [ $((${p}%10)) -eq 1 ];then
+    45	echo "$(((${p}-1)*600000)) INT tests passed"
+    46	fi
+    47	done
+    48	echo "***************************************"
+    49	
+    50	echo "INTB Phil Tests Start"
+    51	make clean &> /dev/null
+    52	make phil TYPE=INTB &> /dev/null
+    53	for p in {2..51}; do
+    54	for n in {1..200}; do
+    55	for i in {1..300}; do
+    56	    seed=$((RANDOM%10000+1))
+    57	    ./phil ${p} ${n} ${seed} > output3
+    58	    success=`egrep -ci "Philosophers terminated" output3`;
+    59	    deadlock=`egrep -ci "deadlock" output3`;
+    60	    fail=`egrep -ci "assertion" output3`;
+    61	    if [ ${success} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${fail} -ne 0 ]; then
+    62	        echo "INTB Test Failed! phil ${p} ${n} ${seed}" >& 2
+    63	        echo "Please check output3"
+    64	        exit 1;
+    65	    fi
+    66	done
+    67	done
+    68	if [ $((${p}%10)) -eq 1 ];then
+    69	echo "$(((${p}-1)*600000)) INTB tests passed"
+    70	fi
+    71	done
+    72	echo "***************************************"
+    73	echo "All Tests Passed"
+    74	exit 0;
+    
+    Line 10,34,58 are checking if program terminate successfully
+    Line 11,35,59 are checking if there is deadlock message in output
+    Line 12,36,60 are checking if there is assertion fail in output
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+
+     1	Script started on Wed 12 Mar 2014 01:11:08 AM EDT
+     2	c99chen@ubuntu1204-006:~/cs343/a4$ time ./testscript.sh 
+     3	SEM Phil Tests Start
+     4	6000000 SEM tests passed
+     5	12000000 SEM tests passed
+     6	18000000 SEM tests passed
+     7	24000000 SEM tests passed
+     8	30000000 SEM tests passed
+     9	***************************************
+    10	INT Phil Tests Start
+    11	6000000 INT tests passed
+    12	12000000 INT tests passed
+    13	18000000 INT tests passed
+    14	24000000 INT tests passed
+    15	30000000 INT tests passed
+    16	***************************************
+    17	INTB Phil Tests Start
+    18	6000000 INTB tests passed
+    19	12000000 INTB tests passed
+    20	18000000 INTB tests passed
+    21	24000000 INTB tests passed
+    22	30000000 INTB tests passed
+    23	***************************************
+    24	All Tests Passed
+    25	
+    26	real	789m11.176s
+    27	user	122m43.064s
+    28	sys     82m25.732s
+    29	c99chen@ubuntu1204-006:~/cs343/a4$ exit
+    30	exit
+    31	
+    32	Script done on Wed 12 Mar 2014 15:19:51 PM EDT
+    
+    From line 24, we can see "All Tests Passed" message is printed out.
+
+    ANALYSIS
+    Since run the test script and see the "All Test Passed" message, we can say there is
+    no deadlock, assertion fail in all 3 versions in each 3000000 tests. Also, all of
+    these tests get a correct logic output since the program print out the last line
+    which is "Philosophers terminated".
+    
+    
+    CONCLUSION:
+    This program has no deadlocks and assertion failures, and also synchronization is guaranteed.
+    Since the output for all there versions makes sense, the logic is implemented correctly 
+    and with reasonable efficiency.
+    

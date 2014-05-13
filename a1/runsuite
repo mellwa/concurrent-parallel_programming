@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [ ${#} -ne 1 ]; then
+	echo "Expect only one argument: test-file. "
+	echo "Incorrect number of command line arguments." >&2
+	exit 1
+fi
+
+# the two soda exe files
+SOLN=./q2 # correct soln
+MYFUN=./noresumption # my solution
+
+N=0
+cat ${1} | while read LINE; do
+	N=$((N+1))
+	
+	# generate the correct output using model soln
+	$SOLN $LINE > $N.out
+
+	# run program to get actual value
+	$MYFUN $LINE > $N.myout 2>&1 # run program and save output
+
+	diff $N.myout $N.out > /dev/null
+
+	if [ ${?} -ne 0 ]; then
+		echo "Test failed: " $LINE
+	else
+		echo "Test passed: " $LINE
+		rm $N.out
+		rm $N.myout
+	fi
+
+done

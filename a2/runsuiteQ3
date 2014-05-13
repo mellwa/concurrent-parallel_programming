@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# the two soda exe files
+SOLN=./quicksort_64 # correct soln
+MYFUN=./quicksort # my solution
+
+	$SOLN ${1} > out.out
+	$MYFUN ${1} > soln.out
+	diff out.out soln.out > /dev/null
+	if [ ${?} -ne 0 ]; then
+		echo “Test failed:” $CONFIG $i
+		diff out.out soln.out > diff_between_outandsoln
+	else
+		echo “Test passed!”
+		rm out.out
+		rm soln.out
+	fi

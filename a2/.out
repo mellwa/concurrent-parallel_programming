@@ -1,0 +1,6 @@
+ignoring bad send request: 3 4 5 6
+round	s:0	s:1	s:2
+0	p0:d0,2	p0:d0,2	p1:a2,0
+1	p1:tok	p1:d1,0	p1:d1,0
+2	p1:a0,1	p1:tok	p0:d2,0
+3	p0:a0,2	p0:a0,2	p0:tok

@@ -1,0 +1,15 @@
+Script started on Sat 05 Apr 2014 04:25:07 PM EDT
+c99chen@ubuntu1204-004:~/cs343/a6$ exittime ./testscript.sh exit[Krm tmpSoda.config [7Pcat my.out[C[10@time ./testscript.sh[C[3Prm tmpSoda.config[C[7Pcat my.out[C[7@rm tmpSoda.config[C[3@time ./testscript.sh[C[10Pcat my.out[C[7@rm tmpSoda.config[Cexit[Ktime ./testscript.sh exit[K[Kexittime ./testscript.sh exit[Krm tmpSoda.config exit[Ktime ./testscript.sh exit[K[K./soda soda.config 0
+Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+c99chen@ubuntu1204-004:~/cs343/a6$ ./soda soda.config 0[K-1
+Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+c99chen@ubuntu1204-004:~/cs343/a6$ ./soda soda.config -1[K[K[K[K[K[K[K[K[K[K[K[K[K[K1
+Error: could not open input file "1"
+c99chen@ubuntu1204-004:~/cs343/a6$ ./soda 1[KNOSUCHFILE
+Error: could not open input file "NOSUCHFILE"
+c99chen@ubuntu1204-004:~/cs343/a6$ ./soda NOSUCHFILE -10
+Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+c99chen@ubuntu1204-004:~/cs343/a6$ exit
+exit
+
+Script done on Sat 05 Apr 2014 04:26:00 PM EDT

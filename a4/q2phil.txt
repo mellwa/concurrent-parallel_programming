@@ -1,0 +1,5 @@
+(d)
+Answer: Since parameters cannot be passed using external scheduling, so internal 
+scheduling is also needed to determine which tasks to execute and which ones 
+should wait. Thus, a uC++ monitor only using external scheduling cannot solve
+this problem

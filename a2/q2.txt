@@ -1,0 +1,116 @@
+Q2
+
+(a)
+The 10 results from single processor are: 
+
+shared:17322036
+shared:17325718
+shared:15998963
+shared:15995246
+shared:18674032 
+shared:18660223 
+shared:20000000
+shared:18664318
+shared:18011755
+shared:18664711
+
+The 10 results from multiprocessor are:
+
+shared:13184122
+shared:13601555
+shared:11534157
+shared:12095508
+shared:12923748
+shared:13084967
+shared:11219803
+shared:12653077
+shared:11166483
+shared:11429791
+
+(b)
+
+No, the 10 runs rarely produce the same result. There would be some
+data lost because the operation is not atomic and also not synchronization, but the amount of
+lost data is hardly same every time we run the program since the thread’s status(run or blocked) is 
+determined by scheduler. In other words, the behaviours of threads are indeterminable. Thus, the 10
+runs rarely get same result.
+
+(c)
+
+In theory, the smallest value is 2 and the largest value is 20000000.
+The MIPS operation of ‘shared += 1’ is  loadaddr $8 shared
+					lw $1, $29
+					addi $1, $1, 1
+					sw $1, 0($29)
+
+We start to check the case of smallest value
+
+	Thread 1		Thread 2
+      loadaddr $8 shared   
+   
+      lw $1, $8
+      addi $1, $1, 1  <=== $1 = 1
+			      (interrupt thread 1)
+			      loadaddr $9 shared
+
+			      lw $2, $9
+			      addi $2, $2, 1
+			      sw $2, 0($9)  <=== shared = 1
+
+			      lw $2, $9
+			      addi $2, $2, 1
+			      sw $2, 0($9)  <=== shared = 2
+				    ……..
+			      (until the 9999999th step)
+			      lw $2, $9
+			      addi $2, $2, 1
+			      sw $2, 0($9)  <=== shared = 9999999
+	
+      (interrupt thread 2)
+      sw $1, 0($8) <===shared = 1
+
+      			       (interrupt thread 1)
+			       lw $2, $9         <==== shared = 1
+			       addi $2, $2, 1     <==== $2 = 2
+      (interrupt thread 2)
+      lw $1, $8
+      addi $1, $1, 1
+      sw $1, 0($8) <=== shared = 2
+
+      lw $1, $8
+      addi $1, $1, 1
+      sw $1, 0($8) <=== shared = 3
+      ……….
+      (until the 10000000th step)
+      lw $1, $8
+      addi $1, $1, 1
+      sw $1, 0($8) <=== shared = 10000000
+	
+				 (interrupt thread 1)
+      				 sw $2, 0($9)    <=== shared = 2
+
+Thus, the smallest value is 2.
+
+The case of largest value is there is no interrupt between the whole steps of shared += 1.
+Thus, the result of thread 1’s execution and thread 2’s execution are never overwritten by
+each other. The largest result should be 20000000.
+
+(d)
+
+The output of uniprocessor is tend to be larger than the output of multiprocessor. Since there
+is only one thread can be running in uniprocessor, the switch between two threads requires thread
+to do context switch that controlled by scheduler(maybe timer). However, threads in multiprocessor
+can be running in parallel. It causes a larger times of overwritten between two threads’
+execution than the overwritten times caused by uniprocessor. Therefore, most of time, the output of
+uniprocessor is larger than multiprocessor.
+
+
+
+
+
+
+
+
+
+
+

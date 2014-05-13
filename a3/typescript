@@ -1,0 +1,29 @@
+Script started on Mon 24 Feb 2014 06:12:57 PM EST
+c99chen@ubuntu1204-004:~/cs343/a3$ exitmake buffer KIND=NOBUSY[1PBUSY[1PBUSY
+rm -f ImplKind
+touch q1boundedBuffer.h
+make buffer KIND=BUSY
+make[1]: Entering directory `/u5/c99chen/cs343/a3'
+echo "IMPLKIND=BUSY" > ImplKind
+sleep 1
+make[1]: Leaving directory `/u5/c99chen/cs343/a3'
+make[1]: Entering directory `/u5/c99chen/cs343/a3'
+u++					 -g -Wall -Wno-unused-label -MMD  -D"BUSY" -D"IMPLTYPE_SEM"   -c -o q1boundedBuffer.o q1boundedBuffer.cc
+uC++ Version 6.0.0 (single processor) (debug) (no yield) (no verify) (no profile)
+u++					 -g -Wall -Wno-unused-label -MMD  -D"BUSY" -D"IMPLTYPE_SEM"   -c -o q1producer.o q1producer.cc
+uC++ Version 6.0.0 (single processor) (debug) (no yield) (no verify) (no profile)
+q1producer.h: In constructor ‘Producer::Producer(BoundedBuffer<int>&, int, int, UPP::uAction)’:
+q1producer.h:10:12: warning: ‘Producer::Delay’ will be initialized after [-Wreorder]
+q1producer.h:8:26: warning:   ‘BoundedBuffer<int>& Producer::buffer’ [-Wreorder]
+q1producer.cc:12:2: warning:   when initialized here [-Wreorder]
+u++					 -g -Wall -Wno-unused-label -MMD  -D"BUSY" -D"IMPLTYPE_SEM"   -c -o q1consumer.o q1consumer.cc
+uC++ Version 6.0.0 (single processor) (debug) (no yield) (no verify) (no profile)
+u++					 -g -Wall -Wno-unused-label -MMD  -D"BUSY" -D"IMPLTYPE_SEM"   -c -o q1driver.o q1driver.cc
+uC++ Version 6.0.0 (single processor) (debug) (no yield) (no verify) (no profile)
+u++					 -g -Wall -Wno-unused-label -MMD  -D"BUSY" -D"IMPLTYPE_SEM" q1boundedBuffer.o q1producer.o q1consumer.o q1driver.o -o buffer
+uC++ Version 6.0.0 (single processor) (debug) (no yield) (no verify) (no profile)
+make[1]: Leaving directory `/u5/c99chen/cs343/a3'
+c99chen@ubuntu1204-004:~/cs343/a3$ exit
+exit
+
+Script done on Mon 24 Feb 2014 06:13:25 PM EST

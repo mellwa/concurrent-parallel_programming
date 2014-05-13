@@ -1,0 +1,262 @@
+SAMPLE TEST DOCUMENTATION
+=========================
+The program converts upper case alphabetic characters to lower case
+alphabetic characters and vice versa.  All other input should be left
+untouched.
+
+USER INTERFACE TESTING
+    There is no user interface to be tested, so the testing focuses
+    solely on the algorithm used for the conversion.
+
+ALGORITHM TESTING
+
+    TEST 1:
+    -------
+    DATA DESCRIPTION
+    The first input file used, is "input.in". The contents of the file,
+    with each line numbered, are:
+      1  123.123
+      2  +1234567890123456.
+      3  +12.E-2
+      4  -12.5
+      5  12.
+      6  -.5
+      7  .1e-123
+      8
+      9   a
+      10  +.
+      11   12.0
+      12  1.2.0a
+      13  0123456789.0123456E-0124
+    Line 1-7 are used to verify that correct grammar string is recognized.
+    Line 8 is used to verify if the program can handle blank line
+    Line 9 and line 10 is used to verify that single wrong string is recognized
+    Line 11-13 are used to check if program can output extraneous characters
+    
+    TESTING
+    Here is the test performance.
+        
+     1	c99chen@ubuntu1204-006:~/cs343/a1$ cat input.in
+     2	123.123
+     3	+1234567890123456.
+     4	+12.E-2
+     5	-12.5
+     6	12.
+     7	-.5
+     8	.1e-123
+     9
+    10  a
+    11	+.
+    12	 12.0
+    13	1.2.0a
+    14	0123456789.0123456E-0124
+    15	c99chen@ubuntu1204-006:~/cs343/a1$ ./floatconstant < input.in
+    16	"123.123" : "123.123" yes
+    17	"+1234567890123456." : "+1234567890123456." yes
+    18	"+12.E-2" : "+12.E-2" yes
+    19	"-12.5" : "-12.5" yes
+    20	"12." : "12." yes
+    21	"-.5" : "-.5" yes
+    22	".1e-123" : ".1e-123" yes
+    23	"" : Warning! Blank line.
+    24	"a" : "a" no
+    25	"+." : "+." no
+    26	" 12.0  " : " " no -- extraneous characters "12.0  "
+    27	"1.2.0a" : "1.2." no -- extraneous characters "0a"
+    28	"0123456789.0123456E-0124" : "0123456789.0123456" 
+        no -- extraneous characters "E-0124"
+    29	c99chen@ubuntu1204-006:~/cs343/a1$
+    
+    ANALYSIS
+    The results from running the program on "input.in" show that:
+    1) The line 2-8 are correctly recognized, and line 16-22 print out correct output.
+    2) Line 9 is a blank line, and the output(line 23) shows the correct output.
+    3) Line 10-11 are simple wrong grammar strings shown in line 24-25
+    4) Line 12-14 are wrong grammar strings with 
+       extraneous characters that shown in line 26-28
+    
+    From this we can say that the program can handle 
+    the two type of grammar strings and show us the expected output
+    
+    
+    TEST 2:
+    -------
+        DATA DESCRIPTION
+        There is no file used to test program since 
+        this test is for number of arguments.
+        
+        TESTING
+        Here is the test performance.
+            1  c99chen@ubuntu1204-006:~/cs343/a1$ ./floatconstant aabbcc
+            2  Error! Could not open input file "aabbcc"
+            3  c99chen@ubuntu1204-006:~/cs343/a1$ ./floatconstant input input2
+            4  Usage: ./floatconstant [infile-file]
+            
+        ANALYSIS
+        Line 1 runs program with an invalid file name and 
+        line 2 shows the error message returned from program. 
+        Line 3 runs the program with incorrect number of input file 
+        and the message from program is in line 4
+        
+        From this we can say the the program can handle 
+        the invalid file name and incorrect number of input files
+    
+    
+
+
+    TEST 3:
+    -------
+    TEST DESCRIPTION
+    Since there is a sample executable file for Q3, 
+    I created a script file to compare the output from sample 
+    program and my program. The "Test failed" will be printed out 
+    if there is any difference between two output files generated 
+    from sample program and my program.
+    
+    Here is my testing script runsuite:
+    
+     1	#!/bin/bash
+       
+     2	if [ ${#} -ne 1 ]; then
+     3		echo "Expect only one argument: test-file. "
+     4		echo "Incorrect number of command line arguments." >&2
+     5		exit 1
+     6	fi
+       
+     7	# the two soda exe files
+     8	SOLN=./floatconstant_64 # correct soln
+     9	MYFUN=./floatconstant # my solution
+       
+    10	N=0
+    11		
+    12		# generate the correct output using model soln
+    13		$SOLN<$1 > $N.out
+       
+    14		# run program to get actual value
+    15		$MYFUN<$1 > $N.myout 2>&1 # run program and save output
+       
+    16		diff $N.myout $N.out > diff.out
+       
+    17		if [ ${?} -ne 0 ]; then
+    18			echo "Test failed: " $LINE
+    19		else
+    20	                echo "solution: "
+    21	                cat $N.out
+    22	                echo "**************************************"
+    23	                echo "my program output: "
+    24			cat $N.myout
+    25			rm $N.out
+    26			rm $N.myout
+    27	                echo "*************************************"
+    28	                echo "Test Pass!"
+    29		fi
+    
+    And here is the input file "inputQ3"
+    
+     1	123.12EF
+     2	+123+12EF
+     3	2E-12EF
+     4	.2E-12EF
+     5	1231.E111F
+       
+     6	+e11.213
+     7	12312333333333333333333e12312314141
+     8	 +.
+     9	+ .
+    10	12EF
+    11	12.0EF
+    12	12.0E1F123
+    13	12.0e456F
+    14	.12e+12F
+    15	         
+    16	+1234567890123456.
+    17	+12.E-2
+    18	-12.5
+    19	12.
+    20	-.5
+    21	.1E+123
+    22	-12.5F
+    23	a
+    24	+.
+    25	 12.0
+    26	12.0  
+    27	1.2.0a
+    28	0123456789.0123456E-0124
+    
+    
+    TESTING
+    Here is the testing for testing script.
+    c99chen@ubuntu1204-006:~/cs343/a1$ ./runsuiteQ3 inputQ3 > out
+    c99chen@ubuntu1204-006:~/cs343/a1$ nl out
+     1	solution: 
+     2	"123.12EF" : "123.12EF" no
+     3	"+123+12EF" : "+123+" no -- extraneous characters "12EF"
+     4	"2E-12EF" : "2E-12E" no -- extraneous characters "F"
+     5	".2E-12EF" : ".2E-12E" no -- extraneous characters "F"
+     6	"1231.E111F" : "1231.E111F" yes
+     7	"" : Warning! Blank line.
+     8	"+e11.213" : "+e" no -- extraneous characters "11.213"
+     9	"12312333333333333333333e12312314141" : "12312333333333333" 
+        no -- extraneous characters "333333e12312314141"
+    10	" +." : " " no -- extraneous characters "+."
+    11	"+ ." : "+ " no -- extraneous characters "."
+    12	"12EF" : "12EF" no
+    13	"12.0EF" : "12.0EF" no
+    14	"12.0E1F123" : "12.0E1F1" no -- extraneous characters "23"
+    15	"12.0e456F" : "12.0e456F" yes
+    16	".12e+12F" : ".12e+12F" yes
+    17	"         " : " " no -- extraneous characters "        "
+    18	"+1234567890123456." : "+1234567890123456." yes
+    19	"+12.E-2" : "+12.E-2" yes
+    20	"-12.5" : "-12.5" yes
+    21	"12." : "12." yes
+    22	"-.5" : "-.5" yes
+    23	".1E+123" : ".1E+123" yes
+    24	"-12.5F" : "-12.5F" yes
+    25	"a" : "a" no
+    26	"+." : "+." no
+    27	" 12.0" : " " no -- extraneous characters "12.0"
+    28	"12.0  " : "12.0 " no -- extraneous characters " "
+    29	"1.2.0a" : "1.2." no -- extraneous characters "0a"
+    30	"0123456789.0123456E-0124" : "0123456789.0123456" 
+         no -- extraneous characters "E-0124"
+    31	***************************************
+    32	my program output: 
+    33	"123.12EF" : "123.12EF" no
+    34	"+123+12EF" : "+123+" no -- extraneous characters "12EF"
+    35	"2E-12EF" : "2E-12E" no -- extraneous characters "F"
+    36	".2E-12EF" : ".2E-12E" no -- extraneous characters "F"
+    37	"1231.E111F" : "1231.E111F" yes
+    38	"" : Warning! Blank line.
+    39	"+e11.213" : "+e" no -- extraneous characters "11.213"
+    40	"12312333333333333333333e12312314141" : "12312333333333333" 
+        no -- extraneous characters "333333e12312314141"
+    41	" +." : " " no -- extraneous characters "+."
+    42	"+ ." : "+ " no -- extraneous characters "."
+    43	"12EF" : "12EF" no
+    44	"12.0EF" : "12.0EF" no
+    45	"12.0E1F123" : "12.0E1F1" no -- extraneous characters "23"
+    46	"12.0e456F" : "12.0e456F" yes
+    47	".12e+12F" : ".12e+12F" yes
+    48	"         " : " " no -- extraneous characters "        "
+    49	"+1234567890123456." : "+1234567890123456." yes
+    50	"+12.E-2" : "+12.E-2" yes
+    51	"-12.5" : "-12.5" yes
+    52	"12." : "12." yes
+    53	"-.5" : "-.5" yes
+    54	".1E+123" : ".1E+123" yes
+    55	"-12.5F" : "-12.5F" yes
+    56	"a" : "a" no
+    57	"+." : "+." no
+    58	" 12.0" : " " no -- extraneous characters "12.0"
+    59	"12.0  " : "12.0 " no -- extraneous characters " "
+    60	"1.2.0a" : "1.2." no -- extraneous characters "0a"
+    61	"0123456789.0123456E-0124" : "0123456789.0123456" 
+         no -- extraneous characters "E-0124"
+    62	*************************************
+    63	Test Pass!
+    
+    ANALYSIS
+    Since we see the "Test Pass!" and there is no "Test fail", my program passed 
+    all tests in inputQ3 file. Thus, this proves the correctness of my program.
+

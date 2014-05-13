@@ -1,0 +1,282 @@
+TOURS-VOTERS TEST DOCUMENTATION
+===============================
+This program simulate a voting system to get the result of voting. A tour group of
+V tourists and each tour can only be composed of G people at a time. Since there are
+only two kinds of tours available at the Louvre, the vote(bool) can be either true or
+false. This program only has to handle cases where the number of tourists in a group
+is odd. Also, in this program. no busy waiting is allowed and barging tasks can spoil
+an election and must be prevented. If the voter has been started, it has a state S,
+and the state will be printed out in buffer flushing. Once a voter's state will be 
+overwritten, the statebuffer will be flushed and state in each voter will be printed
+out. If a voter finished, it will flush buffer immediately and other voters' state
+will be printed a "...". A voting of a voter is a state V with the voter's voting.
+Finish state will be followed by a final result of that group.
+
+USER INTERFACE TESTING
+    There is no user interface to be tested, so the testing focuses
+    solely on the algorithm and synchronization for votes.
+
+
+ALGORITHM AND SYNCHRONIZATION TESTING
+
+  TEST 1:
+  -------
+    DATA DESCRIPTION
+    There is no input for program's arguments. Thus, using default arguments value to
+    test 3 types of program.
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+    
+     1	Script started on Mon 24 Feb 2014 02:56:55 PM EST
+     2	c99chen@ubuntu1204-004:~/cs343/a3$ make vote TYPE=MC
+     3	make: `vote' is up to date.
+     4	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote
+     5	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5
+     6	=======	=======	=======	=======	=======	=======
+     7	S	S	S
+     8			V 1
+     9			B 1	S	S	S
+    10					V 1
+    11					B 2	V 1
+    12						C
+    13	...	...	...	...	...	F 1
+    14			U 1
+    15	...	...	F 1	...	...	...
+    16					U 0
+    17	...	...	...	...	F 1	...
+    18		V 1
+    19		B 1		V 0
+    20	V 1			B 2
+    21	C
+    22	F 1	...	...	...	...	...
+    23		U 1
+    24	...	F 1	...	...	...	...
+    25				U 0
+    26	...	...	...	F 1	...	...
+    27	=================
+    28	All tours started
+    29	c99chen@ubuntu1204-004:~/cs343/a3$ make vote TYPE=SEM
+    30...63
+    64	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote
+    65	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5
+    66	=======	=======	=======	=======	=======	=======
+    67	S	S	S	S	S	S
+    68			V 0
+    69	V 0		B 1
+    70	B 2					V 0
+    71						C
+    72	...	...	...	...	...	F 0
+    73			U 1
+    74	...	...	F 0	...	...	...
+    75	U 0
+    76	F 0	...	...	...	...	...
+    77					V 1
+    78				V 0	B 1
+    79		V 0		B 2
+    80		C
+    81	...	F 0	...	...	...	...
+    82					U 1
+    83	...	...	...	...	F 0	...
+    84				U 0
+    85	...	...	...	F 0	...	...
+    86	=================
+    87	All tours started
+    88	c99chen@ubuntu1204-004:~/cs343/a3$ make vote TYPE=BAR
+    89...122
+   123	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote
+   124	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5
+   125	=======	=======	=======	=======	=======	=======
+   126	S	S	S	S	S	S
+   127					V 0
+   128		V 1			B 1
+   129		B 2	V 0
+   130			C
+   131	...	...	F 0	...	...	...
+   132		U 1
+   133	...	F 0	...	...	...	...
+   134					U 0
+   135	...	...	...	...	F 0	...
+   136				V 1
+   137				B 1		V 1
+   138	V 1					B 2
+   139	C
+   140	F 1	...	...	...	...	...
+   141						U 1
+   142	...	...	...	...	...	F 1
+   143				U 0
+   144	...	...	...	F 1	...	...
+   145	=================
+   146	All tours started
+   147	c99chen@ubuntu1204-004:~/cs343/a3$ exit
+   148	exit
+   149	
+   150	Script done on Mon 24 Feb 2014 02:57:35 PM EST
+   
+   From line 5-28 65-87 124-146, we can see the program runs well and all voters finished
+   as expected. All group get the correct result by counting ballot. After the voter print
+   a F, all other voters print "..." at their state position.
+   
+   ANALYSIS
+   My program generates a correct format and the logical is also correct.
+   
+   
+   
+  TEST 2:
+  -------
+    DATA DESCRIPTION
+    Input an invalid arguments into program
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+   
+     1	Script started on Mon 24 Feb 2014 03:59:25 PM EST
+     2	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote 1 -3 2
+     3	Usage: ./vote  Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+     4	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote 4 3 2
+     5	Usage: ./vote  Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+     6	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote 8 4 2
+     7	Usage: ./vote  Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+     8	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote 14 5 2
+     9	Usage: ./vote  Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+    10	c99chen@ubuntu1204-004:~/cs343/a3$ exit
+    11	exit
+    12	
+    13	Script done on Mon 24 Feb 2014 04:00:09 PM EST
+   
+    ANALYSIS
+    My program can handle invalid arguments like number of members in group is even,
+    V mod G != 0, and other invalid arguments. Since receive invalid arguments the 
+    program print a usage message out.
+    
+    
+  TEST 3:
+  -------
+    DATA DESCRIPTION
+    Using a shell script to generate random arguments into program
+    The script script2.sh code:
+     1	#!/bin/bash
+     2	MYFUN=./vote # my solution
+     3	
+     4	for (( i=1; i<= 1000; i +=1 ));do
+     5	    G=$((RANDOM%100 + 1))
+     6	    if [ $((G%2)) -ne 1 ]; then
+     7	    G=$((G+1));
+     8	    fi
+     9	    V=$(( $((RANDOM%10 + 1))*${G} ))
+    10	    $MYFUN ${V} ${G} ${i} > my.out
+    11	
+    12		if [ ${?} -ne 0 ]; then
+    13			echo “Test failed:” $CONFIG $i
+    14	        exit 1;
+    15		fi
+    16	    finish=`egrep -ci "All tours started" my.out`;
+    17	    deadlock=`egrep -ci "deadlock" my.out`;
+    18	    assertion=`egrep -ci "Assertion" my.out`;
+    19	if [ ${finish} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${assertion} -ne 0 ]; then
+    20	    echo "test failed --- arguments: ${V} ${G} ${i}" >& 2
+    21	    exit 1;
+    22	    fi
+    23	    rm my.out
+    24	
+    25	done
+    26	
+    27	echo "Test passed."
+    28
+    
+    From line 5 to 10, script generate random valid arguments to program, save the output
+    into my.out. If there is a deadlock, assertion, or not reach to the end "All tours
+    started", the script will terminate program and print error message out. If there is no
+    test fail, we will see a message "Test passed" on the screen
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+   
+     1	Script started on Mon 24 Feb 2014 04:35:06 PM EST
+     2	c99chen@ubuntu1204-004:~/cs343/a3$ ./script2.sh 
+     3	Test passed.
+     4	c99chen@ubuntu1204-004:~/cs343/a3$ exit
+     5	exit
+     6	
+     7	Script done on Mon 24 Feb 2014 04:39:33 PM EST
+     
+     From line 3, we can see the "Test passed" message that means the program passed all
+     tests.
+
+     ANALYSIS
+     Since I run the test script and see a "Test passed" message, we can say there is no
+     deadlock, assertion fail in my program in these 1000 tests. Also, all of these test
+     get a correct logic picture printed out since my program print out the last line.
+   
+   
+  TEST 3:
+  -------
+    DATA DESCRIPTION
+    Give program a fix seed and valid V and G. Compare the result between my program of 
+    type SEM and sample program voteSem_64.
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+    
+     1	Script started on Mon 24 Feb 2014 04:59:38 PM EST
+     2	c99chen@ubuntu1204-004:~/cs343/a3$ ./vote 6 3 19
+     3	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5
+     4	=======	=======	=======	=======	=======	=======
+     5	S	S	S	S	S	S
+     6				V 1
+     7				B 1	V 1
+     8			V 0		B 2
+     9			C
+    10	...	...	F 1	...	...	...
+    11				U 1
+    12	...	...	...	F 1	...	...
+    13					U 0
+    14	...	...	...	...	F 1	...
+    15	V 0
+    16	B 1					V 1
+    17		V 0				B 2
+    18		C
+    19	...	F 0	...	...	...	...
+    20	U 1
+    21	F 0	...	...	...	...	...
+    22						U 0
+    23	...	...	...	...	...	F 0
+    24	=================
+    25	All tours started
+    26	c99chen@ubuntu1204-004:~/cs343/a3$ ./voteSEM_64 6 3 19
+    27	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5
+    28	=======	=======	=======	=======	=======	=======
+    29	S	S	S	S	S	S
+    30				V 1
+    31				B 1	V 1
+    32			V 0		B 2
+    33			C
+    34	...	...	F 1	...	...	...
+    35				U 1
+    36	...	...	...	F 1	...	...
+    37					U 0
+    38	...	...	...	...	F 1	...
+    39	V 0
+    40	B 1					V 1
+    41		V 0				B 2
+    42		C
+    43	...	F 0	...	...	...	...
+    44	U 1
+    45	F 0	...	...	...	...	...
+    46						U 0
+    47	...	...	...	...	...	F 0
+    48	=================
+    49	All tours started
+    50	c99chen@ubuntu1204-004:~/cs343/a3$ exit
+    51	exit
+    52	
+    53	Script done on Mon 24 Feb 2014 04:59:48 PM EST
+    
+    ANALYSIS
+    Compare two results, we can see my program generate a totally same result with sample
+    program. We can say the logic of my program is correct, especially at print part.
+   

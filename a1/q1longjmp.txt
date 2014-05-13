@@ -1,0 +1,38 @@
+Question 1(b)
+
+First, we compiled files without optimization 
+c99chen@ubuntu1204-006:~/cs343/a1$ time ./q1_sample 1000 1000 25000
+
+real	0m41.637s
+user	0m41.588s
+sys	0m0.000s
+c99chen@ubuntu1204-006:~/cs343/a1$ time ./q1 1000 1000 25000
+
+real	0m0.466s
+user	0m0.464s
+sys	0m0.000s
+
+the user time of original program and transformed program are 16.680s and 0.160s. Obviously, the speed of transformed program is much faster than the original one.
+
+after doing optimization
+c99chen@ubuntu1204-006:~/cs343/a1$ g++ -O2 -o q1_sample q1.cc 
+c99chen@ubuntu1204-006:~/cs343/a1$ g++ -O2 -o q1 q1soln.cc 
+
+c99chen@ubuntu1204-006:~/cs343/a1$ time ./q1_sample 1000 1000 25000
+
+real	0m15.110s
+user	0m15.088s
+sys	0m0.004s
+c99chen@ubuntu1204-006:~/cs343/a1$ time ./q1 1000 1000 25000
+
+real	0m0.251s
+user	0m0.248s
+sys	0m0.000s
+
+After we compile two programs with optimization method, the two program spend less time than before. However, the original program still takes much more time than the transformed program.
+
+Reason:
+    The longjmp/setjmp does not call the destructor of classes since the program call longjmp but throw/catch does that when the throw is called. Also, longjmp/setjmp do not save and restore signals. Thus, longjmp/setjmp provides efficiency. Since we compile files with optimization flag, programs were optimized by compiler and ran faster than before.
+
+
+

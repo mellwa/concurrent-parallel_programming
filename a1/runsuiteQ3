@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ ${#} -ne 1 ]; then
+	echo "Expect only one argument: test-file. "
+	echo "Incorrect number of command line arguments." >&2
+	exit 1
+fi
+
+# the two soda exe files
+SOLN=./floatconstant_64 # correct soln
+MYFUN=./floatconstant # my solution
+
+N=0
+	
+	# generate the correct output using model soln
+	$SOLN<$1 > $N.out
+
+	# run program to get actual value
+	$MYFUN<$1 > $N.myout 2>&1 # run program and save output
+
+	diff $N.myout $N.out > diff.out
+
+	if [ ${?} -ne 0 ]; then
+		echo "Test failed: " $LINE
+	else
+                echo "solution: "
+                cat $N.out
+                echo "**********************************************************"
+                echo "my program output: "
+		cat $N.myout
+		rm $N.out
+		rm $N.myout
+                echo "*************************************"
+                echo "Test Pass!"
+	fi

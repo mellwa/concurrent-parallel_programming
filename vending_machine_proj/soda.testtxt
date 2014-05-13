@@ -1,0 +1,292 @@
+SODA PEOJECT TEST DOCUMENTATION
+===============================
+This program simulate s a simple concession service using the objects 
+and relationships among name server, student, vending machine, truck,
+bottling plant, watcard office, bank, and parent.
+
+USER INTERFACE TESTING
+    There is no user interface to be tested, so the testing focuses
+    solely on the algorithm and synchronization for philosophers.
+    
+
+ALGORITHM AND SYNCHRONIZATION TESTING
+
+  TEST 1:
+  -------
+  DATA DESCRIPTION
+    Input an invalid arguments or too many arguments into program.
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+    
+     1	Script started on Sat 05 Apr 2014 04:25:07 PM EDT
+     2	c99chen@ubuntu1204-004:~/cs343/a6$ ./soda soda.config 0
+     3	Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+     4	c99chen@ubuntu1204-004:~/cs343/a6$ ./soda soda.config -1
+     5	Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+     6	c99chen@ubuntu1204-004:~/cs343/a6$ ./soda 1
+     7	Error: could not open input file "1"
+     8	c99chen@ubuntu1204-004:~/cs343/a6$ ./soda NOSUCHFILE
+     9	Error: could not open input file "NOSUCHFILE"
+    10	c99chen@ubuntu1204-004:~/cs343/a6$ ./soda NOSUCHFILE -10
+    11	Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+    12  c99chen@ubuntu1204-004:~/cs343/a6$ ./soda soda.config 100 11
+    13  Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+    14  c99chen@ubuntu1204-004:~/cs343/a6$ ./soda soda.config 100 11 1
+    15  Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+    16	c99chen@ubuntu1204-004:~/cs343/a6$ exit
+    17	exit
+    18
+    19	Script done on Sat 05 Apr 2014 04:26:00 PM EDT
+    
+    ANALYSIS
+    Our program can handle invalid arguments like too many arguments input into 
+    program and invalid input of seed of input filename. Since the program receive
+    invalid arguments, it will print a usage or error message out, and then 
+    terminate program.
+    
+    
+  TEST 2:
+  -------
+    DATA DESCRIPTION
+    Run program with input: ./soda soda.config 46671
+    The soda.config file's contexts:
+     1	SodaCost                2
+     2	NumStudents             2
+     3	MaxPurchases            8
+     4	NumVendingMachines      3
+     5	MaxStockPerFlavour      5
+     6	MaxShippedPerFlavour    3
+     7	TimeBetweenShipments    3
+     8	ParentalDelay           2
+     9	NumCouriers             1
+
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+     1	Parent	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+     2	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	
+     3	S	S	S								S	
+     4	D0,1		R0					S2				
+     5	D1,2		R1						S2			
+     6	D0,2	C0,5	R2	S	S					S2	t0,5	
+     7	D0,3		N0,0			S1,1						
+     8		C1,5				V0					T0,5	
+     9	D1,1	W	N1,1		G12						t1,5	
+    10	D1,3						S3,6					
+    11	D0,2		N0,1			V1	V1				T1,5	
+    12		C1,5		P12			L				t1,5	
+    13	D0,2			d0,12	P			r				
+    14	D1,1			D0,0	G15			R				
+    15	D1,2			P15								
+    16				d0,15								
+    17	D0,1		N0,2	U0,2	P	V2		r				
+    18				D0,9								
+    19	D0,3		N0,0	d1,9	G16	V0		R				
+    20	D1,1	W		D1,0					r		T1,5	
+    21	D1,1		N1,2				V2		R			
+    22	D0,2			P16								
+    23				d0,16								
+    24	D0,1		N1,0	U0,0	P		V0	r				
+    25				D0,14								
+    26				d1,14								
+    27	D0,2			U1,3	G10			R	r			
+    28						B3		B1,4				
+    29	...	...	...	...	...	F	...	...	...	...	...	
+    30				D1,6								
+    31	D1,1			d2,6			B3	B3,4	R	r		
+    32	D1,1			D2,0			B1	B3,3		R		
+    33	D0,2											
+    34	D1,2	T1,7		P10							t1,7	
+    35				d0,10								
+    36	D1,2	W		U0,1	P			r			T1,7	
+    37				D0,8								
+    38				d1,8								
+    39	D0,3			U1,3	G9			R	r			
+    40				D1,8			B6	B3,3				
+    41				d2,8								
+    42	D1,3			U2,7					R	r		
+    43	D0,3			D2,1						R		
+    44	D1,1											
+    45	D1,1						B4	B3,2				
+    46	D0,2			P9			B2	B3,1				
+    47				d0,9								
+    48	D0,3			U0,3	P			r				
+    49				D0,8								
+    50				d1,8								
+    51	D0,1			U1,3	G11			R	r			
+    52							B0	B3,1				
+    53	...	...	...	...	...	...	F	...	...	...	...	
+    54				D1,8								
+    55				d2,8								
+    56	D0,3			U2,7					R	r		
+    57	D0,3			D2,8						R		
+    58	D0,2											
+    59	D0,2											
+    60	D0,3											
+    61	D0,1											
+    62	D1,3											
+    63	...	...	...	...	F	...	...	...	...	...	...	
+    64	...	...	...	F	...	...	...	...	...	...	...	
+    65	D0,2											
+    66	...	...	...	...	...	...	...	F	...	...	...	
+    67	D1,2											
+    68	...	...	...	...	...	...	...	...	F	...	...	
+    69	D1,2											
+    70	...	...	...	...	...	...	...	...	...	F	...	
+    71	D0,1											
+    72	...	...	F	...	...	...	...	...	...	...	...	
+    73	D0,2											
+    74	F	...	...	...	...	...	...	...	...	...	...	
+    75	...	F	...	...	...	...	...	...	...	...	...	
+    76	...	...	...	...	...	...	...	...	...	...	F	
+    77	***********************
+    
+    ANALYSIS
+    The results from running the program on "soda.config" show that:
+    1) Parent: Periodically deposit random amount to a random student's account
+    2) WATOff: Each create(C) or tranfer(T) task is corresponded with a finish
+    mark(W), if not, there will be a lost card mark(L) with one of student
+    3) Names: Number of register(R) equals to the number of vending machine
+    4) Truck: Each lowercase d is always with a corresponding D, there will be
+    no prechase operation with the target vending machine between them
+    5) Stud: Keeping buying until bought enough number of bottle
+    6) Mach: No prechase operation when beening stocking
+    7) Cour: Each lowercase t is always with a corresponding T, the values attached
+    with each pair are the same
+    8) Printer format is correct
+    9) All part will be finished eventually
+   10) No infinity loops or deadlock occurs
+
+    In Conclusion:
+      There are no deadlocks and infinity loops, and the output are in good format and logic.
+      Thus the solution is correct.
+    
+  TEST 3:
+  -------
+    DATA DESCRIPTION
+    Using a shell script to input arguments into program by using looping
+    The seed to program will be the number of looping.
+    This test script is testing if there is deadlock, assertion fails,
+    Run time warning(e.g. memory leak), Run time error(e.g. some task not delete),
+    and not reaching to the end of program successfully.
+    The script testscript.sh code:
+
+     1	#!/bin/bash
+     2	echo "Soda Tests Start"
+     3	make clean &> /dev/null
+     4	make &> /dev/null
+     5	RUN=./soda # my solution
+     6	g++ -o gen gen.cc
+     7	generate=./gen
+     8	for (( i=1; i <= 10000; i +=1 ));do
+     9	    ${generate} > tmpSoda.config
+    10	    $RUN tmpSoda.config $i &> my.out
+    11	    echo $i >> seed.txt
+    12	    if [ ${?} -ne 0 ]; then
+    13	        echo "Test failed:" $CONFIG $i
+    14	    fi
+    15	    runtimeWarning=`egrep -ci "warning" my.out`;
+    16	    runtimeError=`egrep -ci "error" my.out`;
+    17	    finish=`egrep -ci "***********************" my.out`;
+    18	    deadlock=`egrep -ci "deadlock" my.out`;
+    19	    assertion=`egrep -ci "Assertion" my.out`;
+    20	    if [ ${finish} -eq 0 ] || [ ${deadlock} -ne 0 ] || 
+    21	       [ ${assertion} -ne 0 ] || [ ${runtimeWarning} -ne 0 ] || 
+    22	       [ ${runtimeError} -ne 0 ]; then
+    23	        echo "test failed! Please see my.out" >& 2
+    24	        exit 1;
+    25	    fi
+    26	    rm my.out
+    27	    if [ $(($i%1000)) -eq 0 ]; then
+    28	        echo "${i} tests passed"
+    29	    fi
+    30	
+    31	done
+    32	
+    33	echo "***************************************"
+
+    line 15 is checking if there is run time warning in this program
+    line 16 is checking if there is run time error in this program
+    line 17 is checking if program terminate successfully
+    line 18 is checking if there is any deadlock in program
+    line 19 is checking if there is any assertion fail in program
+
+    line 6,7,9 are generating temp soda.config input file to program
+    The generating file is gen.cc. 
+    The code of gen.cc is showing here:
+
+     1	#include <iostream>
+     2	#include <unistd.h>
+     3	#include <cstdlib>
+     4	using namespace std;
+     5	
+     6	class MPRNG {
+     7	  public:
+     8	    MPRNG( unsigned int seed = 1009 ) { srand( seed ); }// set seed
+     9	    void seed( unsigned int seed ) { srand( seed ); } // set seed
+    10	    unsigned int operator()() { return rand(); }  // [0,UINT_MAX]
+    11	    unsigned int operator()( unsigned int u ) { 
+    12		return operator()() % (u + 1); 
+    13	    } // [0,u]
+    14	    unsigned int operator()( unsigned int l, unsigned int u ){ 
+    15		return operator()( u - l ) + l; 
+    16	    } // [l,u]
+    17	};
+    18	
+    19	MPRNG mprng;
+    20	
+    21	int main(int argc, char **argv)
+    22	{
+    23	    mprng.seed(getpid());
+    24	    cout << "SodaCost\t\t"<<mprng(1,20)<<endl ;
+    25	    cout << "NumStudents\t\t"<<mprng(1,20)<<endl ;
+    26	    cout << "MaxPurchases\t\t"<<mprng(1,20)<<endl ;
+    27	    cout << "NumVendingMachines\t"<<mprng(1,20)<<endl ;
+    28	    cout << "MaxStockPerFlavour\t"<<mprng(1,20)<<endl ;
+    29	    cout << "MaxShippedPerFlavour\t"<<mprng(1,20)<<endl ;
+    30	    cout << "TimeBetweenShipments\t"<<mprng(1,20)<<endl ;
+    31	    cout << "ParentalDelay\t\t"<<mprng(1,20)<<endl ;
+    32	    cout << "NumCouriers\t\t"<<mprng(1,20)<<endl ;
+    33	    cout<<endl;
+    34	}
+
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+
+     1	Script started on Sat 05 Apr 2014 02:31:20 PM EDT
+     2	c99chen@ubuntu1204-004:~/cs343/a6$ time ./testscript.sh 
+     3	Soda Tests Start
+     4	1000 tests passed
+     5	2000 tests passed
+     6	3000 tests passed
+     7	4000 tests passed
+     8	5000 tests passed
+     9	6000 tests passed
+    10	7000 tests passed
+    11	8000 tests passed
+    12	9000 tests passed
+    13	10000 tests passed
+    14	***************************************
+    15	
+    16	real	59m22.378s
+    17	user	50m34.192s
+    18	sys	4m31.880s
+    19	c99chen@ubuntu1204-004:~/cs343/a6$ exit
+    20	exit
+    21	
+    22	Script done on Sat 05 Apr 2014 03:35:38 PM EDT
+    
+    From line 4 to line 13, we can see all 10000 test passed.
+    
+    ANALYSIS
+    Since run the test script and see the all "test passed" message, we know there is
+    no deadlock, assertion fail, Run time error, or Run time warning in program. 
+    
+    Conclusion:
+    Since there are no deadlocks and assertion failures, synchronization is guaranteed. 
+    The output follow the given assignment's logic. Thus, we can say the solution is 
+    implemented correctly and with reasonable efficiency.

@@ -1,0 +1,68 @@
+Q3 (b)
+i.
+     1	Script started on Sun 02 Feb 2014 07:20:47 PM EST
+     2	c99chen@ubuntu1204-002:~/cs343/a2$ time ./quicksort size -0
+     3	
+     4	real	0m13.257s
+     5	user	0m12.908s
+     6	sys	0m0.352s
+     7	c99chen@ubuntu1204-002:~/cs343/a2$ time ./quicksort size -1
+     8	
+     9	real	0m7.956s
+    10	user	0m13.240s
+    11	sys	0m0.836s
+    12	c99chen@ubuntu1204-002:~/cs343/a2$ time ./quicksort size -2
+    13	
+    14	real	0m5.087s
+    15	user	0m14.016s
+    16	sys	0m1.260s
+    17	c99chen@ubuntu1204-002:~/cs343/a2$ time ./quicksort size -3
+    18	
+    19	real	0m4.118s
+    20	user	0m16.664s
+    21	sys	0m1.780s
+    22	c99chen@ubuntu1204-002:~/cs343/a2$ time ./quicksort size -4
+    23	
+    24	real	0m3.557s
+    25	user	0m22.076s
+    26	sys	0m2.388s
+    27	c99chen@ubuntu1204-002:~/cs343/a2$ time ./quicksort size -5
+    28	
+    29	real	0m3.316s
+    30	user	0m39.120s
+    31	sys	0m3.200s
+    32	c99chen@ubuntu1204-002:~/cs343/a2$ time ./quicksort size -6
+    33	
+    34	real	0m12.452s
+    35	user	9m57.056s
+    36	sys	0m16.096s
+    37	c99chen@ubuntu1204-002:~/cs343/a2$ exit
+    38	exit
+    39	
+    40	Script done on Sun 02 Feb 2014 07:23:15 PM EST
+
+ii.
+
+As the number of depth increase, the number of processor increases exponentially.
+Since the number of processor increases from 0 to 2^5(which is 32), the running
+time decreases from 13.257s to 3.316s. From depth 4 to depth 5, the running time
+only changed a little although we doubled the number of processor from 16 to 32.
+When the depth increases from 5 to 6, the running time increases from 3.316s to
+12.452s.
+
+iii.
+
+Since we have more than one processors, new threads are created since we call 
+the task and run in parallel with the parent thread, and its child or itself 
+does the same thing recursively. When the number of processors get doubled, 
+the running time approximately decreased in half (more than half actually). 
+But since there are too many processors, the running time increased.
+
+
+
+
+
+
+
+
+

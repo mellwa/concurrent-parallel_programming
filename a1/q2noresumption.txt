@@ -1,0 +1,9 @@
+Question 2 
+    (a)
+	Since we cannot either using global variables or passing extra parameter 
+     into our fix-up routine, we have no way to choose the handler that should be
+     used on specific condition. In this program, there are two types of handler that
+     perform different tasks. Therefore, using fix-up routine in this program 
+     cannot simulate performance of _Resume/_CatchResume since the fix-up routine cannot
+     determine which handler should be used to specific condition. Thus, this program 
+     cannot be simulated by passing handler routines among the routines.

@@ -1,0 +1,97 @@
+A1(b)
+
+i.
+ 
+BUSY with -O2:
+c99chen@ubuntu1204-004:~/cs343/a3$ time ./buffer 50 55 10000 30 10
+total: -1544692296
+
+real	0m14.554s
+user	0m14.540s
+sys	0m0.004s
+
+BUSY without -O2:
+c99chen@ubuntu1204-004:~/cs343/a3$ time ./buffer 50 55 10000 30 10
+total: -1544692296
+
+real	0m14.923s
+user	0m14.900s
+sys	0m0.008s
+
+NOBUSY with -O2
+c99chen@ubuntu1204-004:~/cs343/a3$ time ./buffer 50 55 10000 30 10
+total: -1544692296
+
+real	0m14.984s
+user	0m14.956s
+sys	0m0.012s
+
+NOBUSY without -O2
+c99chen@ubuntu1204-004:~/cs343/a3$ time ./buffer 50 55 10000 30 10
+total: -1544692296
+
+real	0m15.488s
+user	0m15.460s
+sys	0m0.012s
+
+ii.
+From the timing result, we can see the NOBUSY waiting program spends less time than BUSY
+waiting program since the other condition is same. BUSY with optimization is 14.540s and
+NOBUSY with optimization is 14.956s. BUSY without optimization is 14.900s and NOBUSY with
+optimization is 15.460s. With the optimization -O2, program will run faster. BUSY program
+decrease running time from 14.900s to 14.540s and NOBUSY decrease running time from 
+15.460s to 14.956s.
+
+iii.
+Since the no busy waiting execution need to prevent barging task, there is a signal flag
+to check if the current task is barging. If the task is a barging task, it will be
+blocked on barging lock until some condition is true. In this period, the blocking 
+task has to wait on barging lock. Thus, no busy waiting program spend more time than 
+busy waiting execution since each wait/signal on barging lock there is a reacquire of 
+a mutex which incurs more overhead. Busy waiting program spend less time however it may 
+cause some tasks get starvation since a blocked task may stay in the looping for a 
+long time.
+
+iv.
+
+busy waiting with multi processors:
+
+c99chen@ubuntu1204-004:~/cs343/a3$ time ./buffer 50 55 10000 30 10
+total: -1544842931
+
+real	1m47.245s
+user	7m8.300s
+sys	0m0.660s
+
+
+no busy waiting with multi processors:
+
+c99chen@ubuntu1204-004:~/cs343/a3$ time ./buffer 50 55 10000 30 10
+total: -1544692296
+
+real	1m51.583s
+user	7m25.496s
+sys	0m0.776s
+
+
+v.
+
+The performance time on multiprocessor execution is much larger than uniprocessor execution.
+Busy wait is still faster than the no busy wait.
+
+vi.
+
+
+Since there are 3 more core added into program, the larger contention for the buffer. There
+is only one buffer and the buffer is protected by mutex lock. More cpu means more tasks
+acquire uCond lock and uOwner lock at same time, and there will be more failed acquiring.
+Hence, the running time will increase by this reason. More cpu in this case will incur more
+overhead.
+
+
+
+
+
+
+
+

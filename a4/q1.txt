@@ -1,0 +1,11 @@
+Q1
+    There is a lovelock among the sweeping angels.
+    The angels can move quickly and silently if there is no other being
+observe them, but if they are observed by other beings, they will become
+quantum locked.
+    We can assume angel 0 will be locked by angel 1 if angel 1 is looking at
+angel 0, and since angel 0 is still looking at angel 1, angel 1 is locked by
+angel 0. They never can make any progress unless outside force move them
+apart. It's just like two people meet in a one-way narrow bridge, and each 
+of them try to be polite and give way to the other. So they simultaneously 
+step to the same side each time and never make any progress.

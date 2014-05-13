@@ -1,0 +1,25 @@
+#!/bin/bash
+if [ ${#} -ne 1 ]; then
+	echo "Expect only one argument: test-file. "
+	echo "Incorrect number of command line arguments." >&2
+	exit 1
+fi
+SOLN=./tokenring_64 # correct soln
+MYFUN=./tokenring # my solution
+fail=0
+for (( i=2; i<= 100; i +=1 ));do
+	$SOLN $i ${1} > out.out
+	$MYFUN $i ${1} > soln.out
+	diff out.out soln.out > /dev/null
+	if [ ${?} -ne 0 ]; then
+		echo “Test failed:” $CONFIG $i
+		diff out.out soln.out > $i.out
+		fail=1
+	else
+		rm out.out
+		rm soln.out
+	fi
+done
+if [ $fail -ne 1 ]; then
+	echo “ALL TESTS PASSED”
+fi

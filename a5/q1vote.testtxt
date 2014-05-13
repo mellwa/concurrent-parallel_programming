@@ -1,0 +1,444 @@
+TOURS-VOTERS TEST DOCUMENTATION
+===============================
+This program simulate a voting system to get the result of voting. A tour group of
+V tourists and each tour can only be composed of G people at a time. Since there are
+only two kinds of tours available at the Louvre, the vote(bool) can be either true or
+false. This program only has to handle cases where the number of tourists in a group
+is odd. Also, in this program. no busy waiting is allowed and barging tasks can spoil
+an election and must be prevented. If the voter has been started, it has a state S,
+and the state will be printed out in buffer flushing. Once a voter's state will be 
+overwritten, the state buffer will be flushed and state in each voter will be printed
+out. If a voter finished, it will flush buffer immediately and other voters' state
+will be printed a "...". A voting of a voter is a state V with the voter's voting.
+Finish state will be followed by a final result of that group.
+
+USER INTERFACE TESTING
+    There is no user interface to be tested, so the testing focuses
+    solely on the algorithm and synchronization for votes.
+
+
+ALGORITHM AND SYNCHRONIZATION TESTING
+
+  TEST 1:
+  -------
+    DATA DESCRIPTION
+    Input an invalid arguments into program
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+    
+     1	Script started on Tue 25 Mar 2014 01:50:13 PM EDT
+     2	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 2 2 2
+     3	Usage: ./vote  Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+     4	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 4 2 1
+     5	Usage: ./vote  Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+     6	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 0 0 1
+     7	Usage: ./vote Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+     8	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 1 -3 2
+     9	Usage: ./vote Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+    10	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 14 5 9
+    11	Usage: ./vote  Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+    12	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 9 3 0
+    13	Usage: ./vote Voters (> 0 & V mod G = 0, default 6)  Group (> 0 & odd, default 3)  Seed (> 0)
+    14	c99chen@ubuntu1204-002:~/cs343/a5$ exit
+    15	exit
+    16	
+    17	Script done on Tue 25 Mar 2014 02:24:14 PM EDT
+    
+    ANALYSIS
+    My program can handle invalid arguments like number of members in group is even,
+    V mod G != 0, and other invalid arguments. Since receive invalid arguments the 
+    program print a usage message out.
+    
+    
+  TEST 2:
+  -------
+    DATA DESCRIPTION
+    Using 9 3 10 as input arguments for 5 versions of program to check the output.
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+    
+     1	Script started on Tue 25 Mar 2014 02:45:04 PM EDT
+     2	c99chen@ubuntu1204-002:~/cs343/a5$ make vote TYPE=EXT
+     3 ... 29
+    30	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 9 3 10
+    31	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5	Voter6	Voter7	Voter8
+    32	=======	=======	=======	=======	=======	=======	=======	=======	=======
+    33	S	S	S	S	S	S	S	S	S
+    34				V 1
+    35				B 1					V 1
+    36		V 1							B 2
+    37		C
+    38	...	F 1	...	...	...	...	...	...	...
+    39									U 1
+    40	...	...	...	...	...	...	...	...	F 1
+    41				U 0
+    42	...	...	...	F 1	...	...	...	...	...
+    43								V 0
+    44	V 1							B 1
+    45	B 2						V 0
+    46							C
+    47	...	...	...	...	...	...	F 0	...	...
+    48	U 1
+    49	F 0	...	...	...	...	...	...	...	...
+    50								U 0
+    51	...	...	...	...	...	...	...	F 0	...
+    52						V 1
+    53			V 0			B 1
+    54			B 2		V 0
+    55					C
+    56	...	...	...	...	F 0	...	...	...	...
+    57			U 1
+    58	...	...	F 0	...	...	...	...	...	...
+    59						U 0
+    60	...	...	...	...	...	F 0	...	...	...
+    61	=================
+    62	All tours started
+    63	c99chen@ubuntu1204-002:~/cs343/a5$ make vote TYPE=INT
+    64 ... 97
+    98	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 9 3 10
+    99	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5	Voter6	Voter7	Voter8
+   100	=======	=======	=======	=======	=======	=======	=======	=======	=======
+   101	S	S	S	S	S	S	S	S	S
+   102				V 1
+   103				B 1					V 1
+   104		V 1							B 2
+   105		C
+   106	...	F 1	...	...	...	...	...	...	...
+   107				U 1
+   108	...	...	...	F 1	...	...	...	...	...
+   109									U 0
+   110	...	...	...	...	...	...	...	...	F 1
+   111								V 0
+   112	V 1							B 1
+   113	B 2						V 0
+   114							C
+   115	...	...	...	...	...	...	F 0	...	...
+   116								U 1
+   117	...	...	...	...	...	...	...	F 0	...
+   118	U 0
+   119	F 0	...	...	...	...	...	...	...	...
+   120						V 1
+   121			V 0			B 1
+   122			B 2		V 0
+   123					C
+   124	...	...	...	...	F 0	...	...	...	...
+   125						U 1
+   126	...	...	...	...	...	F 0	...	...	...
+   127			U 0
+   128	...	...	F 0	...	...	...	...	...	...
+   129	=================
+   130	All tours started
+   131	c99chen@ubuntu1204-002:~/cs343/a5$ make vote TYPE=INTB
+   132 ... 168
+   169	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 9 3 10
+   170	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5	Voter6	Voter7	Voter8
+   171	=======	=======	=======	=======	=======	=======	=======	=======	=======
+   172	S	S	S	S	S	S	S	S	S
+   173				V 1
+   174				B 1					V 1
+   175		V 1							B 2
+   176		C
+   177	...	F 1	...	...	...	...	...	...	...
+   178									U 1
+   179	...	...	...	...	...	...	...	...	F 1
+   180				U 0
+   181	...	...	...	F 1	...	...	...	...	...
+   182								V 0
+   183	V 1							B 1
+   184	B 2						V 0
+   185							C
+   186	...	...	...	...	...	...	F 0	...	...
+   187	U 1
+   188	F 0	...	...	...	...	...	...	...	...
+   189								U 0
+   190	...	...	...	...	...	...	...	F 0	...
+   191						V 1
+   192			V 0			B 1
+   193			B 2		V 0
+   194					C
+   195	...	...	...	...	F 0	...	...	...	...
+   196			U 1
+   197	...	...	F 0	...	...	...	...	...	...
+   198						U 0
+   199	...	...	...	...	...	F 0	...	...	...
+   200	=================
+   201	All tours started
+   202	c99chen@ubuntu1204-002:~/cs343/a5$ make vote TYPE=AUTO
+   203 ... 236
+   237	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 9 3 10
+   238	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5	Voter6	Voter7	Voter8
+   239	=======	=======	=======	=======	=======	=======	=======	=======	=======
+   240	S	S	S	S	S	S	S	S	S
+   241				V 1
+   242				B 1					V 1
+   243		V 1							B 2
+   244		C
+   245	...	F 1	...	...	...	...	...	...	...
+   246				U 1
+   247	...	...	...	F 1	...	...	...	...	...
+   248									U 0
+   249	...	...	...	...	...	...	...	...	F 1
+   250								V 0
+   251	V 1							B 1
+   252	B 2						V 0
+   253							C
+   254	...	...	...	...	...	...	F 0	...	...
+   255								U 1
+   256	...	...	...	...	...	...	...	F 0	...
+   257	U 0
+   258	F 0	...	...	...	...	...	...	...	...
+   259						V 1
+   260			V 0			B 1
+   261			B 2		V 0
+   262					C
+   263	...	...	...	...	F 0	...	...	...	...
+   264						U 1
+   265	...	...	...	...	...	F 0	...	...	...
+   266			U 0
+   267	...	...	F 0	...	...	...	...	...	...
+   268	=================
+   269	All tours started
+   270	c99chen@ubuntu1204-002:~/cs343/a5$ make vote TYPE=TASK
+   271 ... 307
+   308	c99chen@ubuntu1204-002:~/cs343/a5$ ./vote 9 3 10
+   309	Voter0	Voter1	Voter2	Voter3	Voter4	Voter5	Voter6	Voter7	Voter8
+   310	=======	=======	=======	=======	=======	=======	=======	=======	=======
+   311	S	S	S	S	S	S	S	S	S
+   312				V 1
+   313				B 1					V 1
+   314		V 1							B 2
+   315		B 3
+   316		C		U 2
+   317	...	...	...	F 1	...	...	...	...	...
+   318									U 1
+   319	...	...	...	...	...	...	...	...	F 1
+   320		U 0
+   321	...	F 1	...	...	...	...	...	...	...
+   322								V 0
+   323	V 1							B 1
+   324	B 2						V 0
+   325							B 3
+   326							C	U 2
+   327	...	...	...	...	...	...	...	F 0	...
+   328	U 1
+   329	F 0	...	...	...	...	...	...	...	...
+   330							U 0
+   331	...	...	...	...	...	...	F 0	...	...
+   332						V 1
+   333			V 0			B 1
+   334			B 2		V 0
+   335					B 3
+   336					C	U 2
+   337	...	...	...	...	...	F 0	...	...	...
+   338			U 1
+   339	...	...	F 0	...	...	...	...	...	...
+   340					U 0
+   341	...	...	...	...	F 0	...	...	...	...
+   342	=================
+   343	All tours started
+   344	c99chen@ubuntu1204-002:~/cs343/a5$ exit
+   345	exit
+   346	
+   347	Script done on Tue 25 Mar 2014 02:46:38 PM EDT
+   
+   From line 31-62, 99-130, 170-201, 238-269, 309-343, we can see all 5 versions of this
+   program run well and terminate without assertion or error.
+   
+   ANALYSIS
+   From the output, we can see that 5 versions' logics are correct. All 5 outputs do make
+   sence for the program.
+
+    
+    
+  TEST 3:
+  -------
+    DATA DESCRIPTION
+    Using a shell script to generate random arguments into program
+    The script script2.sh code:
+    
+     1	#!/bin/bash
+     2	echo "EXT Vote Tests Start"
+     3	make clean &> /dev/null
+     4	make vote TYPE=EXT &> /dev/null
+     5	MYFUN=./vote # my solution
+     6	for (( i=1; i<= 1000; i +=1 ));do
+     7	    G=$((RANDOM%100 + 1))
+     8	    if [ $((G%2)) -ne 1 ]; then
+     9	        G=$((G+1));
+    10	    fi
+    11	    V=$(( $((RANDOM%10 + 1))*${G} ))
+    12	    $MYFUN ${V} ${G} ${i} > myEXT.out
+    13	
+    14	    if [ ${?} -ne 0 ]; then
+    15	        echo “Test failed:” $CONFIG $i
+    16	        exit 1;
+    17	    fi
+    18	    finish=`egrep -ci "All tours started" myEXT.out`;
+    19	    deadlock=`egrep -ci "deadlock" myEXT.out`;
+    20	    assertion=`egrep -ci "Assertion" myEXT.out`;
+    21	    if [ ${finish} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${assertion} -ne 0 ]; then
+    22	        echo "test failed --- arguments: ${V} ${G} ${i}" >& 2
+    23	        exit 1;
+    24	    fi
+    25	    rm myEXT.out
+    26	done
+    27	echo "EXT Vote Test passed."
+    28	echo "***************************************"
+    29	
+    30	
+    31	echo "INT Vote Tests Start"
+    32	make clean &> /dev/null
+    33	make vote TYPE=INT &> /dev/null
+    34	MYFUN=./vote # my solution
+    35	for (( i=1; i<= 1000; i +=1 ));do
+    36	    G=$((RANDOM%100 + 1))
+    37	    if [ $((G%2)) -ne 1 ]; then
+    38	        G=$((G+1));
+    39	    fi
+    40	    V=$(( $((RANDOM%10 + 1))*${G} ))
+    41	    $MYFUN ${V} ${G} ${i} > myINT.out
+    42	    if [ ${?} -ne 0 ]; then
+    43	        echo “Test failed:” $CONFIG $i
+    44	        exit 1;
+    45	    fi
+    46	    finish=`egrep -ci "All tours started" myINT.out`;
+    47	    deadlock=`egrep -ci "deadlock" myINT.out`;
+    48	    assertion=`egrep -ci "Assertion" myINT.out`;
+    49	    if [ ${finish} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${assertion} -ne 0 ]; then
+    50	        echo "test failed --- arguments: ${V} ${G} ${i}" >& 2
+    51	        exit 1;
+    52	    fi
+    53	    rm myINT.out
+    54	done
+    55	echo "INT Vote Test passed."
+    56	echo "***************************************"
+    57	
+    58	
+    59	echo "INTB Vote Tests Start"
+    60	make clean &> /dev/null
+    61	make vote TYPE=INTB &> /dev/null
+    62	MYFUN=./vote # my solution
+    63	for (( i=1; i<= 1000; i +=1 ));do
+    64	    G=$((RANDOM%100 + 1))
+    65	    if [ $((G%2)) -ne 1 ]; then
+    66	        G=$((G+1));
+    67	    fi
+    68	    V=$(( $((RANDOM%10 + 1))*${G} ))
+    69	    $MYFUN ${V} ${G} ${i} > myINTB.out
+    70	    if [ ${?} -ne 0 ]; then
+    71	        echo “Test failed:” $CONFIG $i
+    72	        exit 1;
+    73	    fi
+    74	    finish=`egrep -ci "All tours started" myINTB.out`;
+    75	    deadlock=`egrep -ci "deadlock" myINTB.out`;
+    76	    assertion=`egrep -ci "Assertion" myINTB.out`;
+    77	    if [ ${finish} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${assertion} -ne 0 ]; then
+    78	        echo "test failed --- arguments: ${V} ${G} ${i}" >& 2
+    79	        exit 1;
+    80	    fi
+    81	    rm myINTB.out
+    82	done
+    83	echo "INTB Vote Test passed."
+    84	echo "***************************************"
+    85	
+    86	echo "AUTO Vote Tests Start"
+    87	make clean &> /dev/null
+    88	make vote TYPE=AUTO &> /dev/null
+    89	MYFUN=./vote # my solution
+    90	for (( i=1; i<= 1000; i +=1 ));do
+    91	    G=$((RANDOM%100 + 1))
+    92	    if [ $((G%2)) -ne 1 ]; then
+    93	        G=$((G+1));
+    94	    fi
+    95	    V=$(( $((RANDOM%10 + 1))*${G} ))
+    96	    $MYFUN ${V} ${G} ${i} > myAUTO.out
+    97	    if [ ${?} -ne 0 ]; then
+    98	        echo “Test failed:” $CONFIG $i
+    99	        exit 1;
+   100	    fi
+   101	    finish=`egrep -ci "All tours started" myAUTO.out`;
+   102	    deadlock=`egrep -ci "deadlock" myAUTO.out`;
+   103	    assertion=`egrep -ci "Assertion" myAUTO.out`;
+   104	    if [ ${finish} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${assertion} -ne 0 ]; then
+   105	        echo "test failed --- arguments: ${V} ${G} ${i}" >& 2
+   106	        exit 1;
+   107	    fi
+   108	rm myAUTO.out
+   109	done
+   110	echo "AUTO Vote Test passed."
+   111	echo "***************************************"
+   112	
+   113	echo "TASK Vote Tests Start"
+   114	make clean &> /dev/null
+   115	make vote TYPE=TASK &> /dev/null
+   116	MYFUN=./vote # my solution
+   117	for (( i=1; i<= 1000; i +=1 ));do
+   118	    G=$((RANDOM%100 + 1))
+   119	    if [ $((G%2)) -ne 1 ]; then
+   120	        G=$((G+1));
+   121	    fi
+   122	    V=$(( $((RANDOM%10 + 1))*${G} ))
+   123	    $MYFUN ${V} ${G} ${i} > myTASK.out
+   124	    if [ ${?} -ne 0 ]; then
+   125	        echo “Test failed:” $CONFIG $i
+   126	        exit 1;
+   127	    fi
+   128	    finish=`egrep -ci "All tours started" myTASK.out`;
+   129	    deadlock=`egrep -ci "deadlock" myTASK.out`;
+   130	    assertion=`egrep -ci "Assertion" myTASK.out`;
+   131	    if [ ${finish} -eq 0 ] || [ ${deadlock} -ne 0 ] || [ ${assertion} -ne 0 ]; then
+   132	        echo "test failed --- arguments: ${V} ${G} ${i}" >& 2
+   133	        exit 1;
+   134	    fi
+   135	    rm myTASK.out
+   136	done
+   137	echo "TASK Vote Test passed."
+   138	echo "***************************************"
+    
+    From the script, we can see if there is a deadlock, assertion, or not reach to
+    the end "All tours started", the script will terminate prgram and print error 
+    message out. The output will be stored in myEXT/INT/INTB/AUTO/TASK.out
+    
+    TESTING
+    Here is the script-fixed log of the testing performed with line numbers
+    attached.
+
+     1	Script started on Tue 25 Mar 2014 12:51:18 PM EDT
+     2	c99chen@ubuntu1204-002:~/cs343/a5$ time ./testscript.sh 
+     3	EXT Vote Tests Start
+     4	EXT Vote Test passed.
+     5	***************************************
+     6	INT Vote Tests Start
+     7	INT Vote Test passed.
+     8	***************************************
+     9	INTB Vote Tests Start
+    10	INTB Vote Test passed.
+    11	***************************************
+    12	AUTO Vote Tests Start
+    13	AUTO Vote Test passed.
+    14	***************************************
+    15	TASK Vote Tests Start
+    16	TASK Vote Test passed.
+    17	***************************************
+    18	
+    19	real	31m12.403s
+    20	user	26m3.952s
+    21	sys	3m27.112s
+    22	c99chen@ubuntu1204-002:~/cs343/a5$ exit
+    23	exit
+    24	
+    25	Script done on Tue 25 Mar 2014 01:29:38 PM EDT
+    
+    ANALYSIS
+    Since run the test script and see the 5 tests passed message, we can say there is
+    no deadlock, assertion fail in all 5 versions. Also, all of these tests get a correct 
+    logic output since the program print out the last line.
+     
+    CONCLUSION:
+    This program has no deadlocks and assertion failures, and also synchronization is guaranteed.
+    Since the output for all there versions makes sense, the logic is implemented correctly 
+    and with reasonable efficiency. 
